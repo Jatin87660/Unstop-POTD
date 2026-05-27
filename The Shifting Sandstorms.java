@@ -10,25 +10,19 @@ public class Main {
 
         int[] current = Arrays.copyOf(intensities, N);
 
-        // Simulate K hours
         for (int hour = 0; hour < K; hour++) {
 
             int[] next = new int[N];
 
-            // Special case
             if (N == 1) {
                 next[0] = current[0];
             } else {
-
-                // First city
                 next[0] = current[1];
 
-                // Middle cities
                 for (int i = 1; i < N - 1; i++) {
                     next[i] = (current[i - 1] + current[i + 1]) / 2;
                 }
 
-                // Last city
                 next[N - 1] = current[N - 2];
             }
 
@@ -37,7 +31,6 @@ public class Main {
 
         StringBuilder sb = new StringBuilder();
 
-        // Process Queries
         for (int[] q : queries) {
 
             int l = q[0] - 1;
