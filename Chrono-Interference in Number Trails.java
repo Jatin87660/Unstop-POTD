@@ -2,52 +2,78 @@ import java.util.*;
 
 public class Main {
 
-    public static int max_remaining_sum(int N, int[] A, int[][] T) {
+    public static void chronoLockedUpgrade(int n, int m, int[] chronoLock, int[][] edges) {
 
-        int remainingSum = 0;
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            graph.add(new ArrayList<>());
+        }
 
-        for (int j = 0; j < N; j++) {
+        int[] indegree = new int[n];
 
-            boolean removable = false;
+        for (int[] edge : edges) {
+            int u = edge[0] - 1;
+            int v = edge[1] - 1;
 
-            for (int i = 0; i < j; i++) {
-                if (A[i] > A[j]) {
-                    removable = true;
-                    break;
-                }
-            }
+            graph.get(u).add(v);
+            indegree[v]++;
+        }
 
-            // Keep only non-removable elements
-            if (!removable) {
-                remainingSum += A[j];
+        Queue<Integer> q = new LinkedList<>();
+
+        long[] parentMax = new long[n];
+
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.offer(i);
             }
         }
 
-        return remainingSum;
+        int visited = 0;
+        long answer = 0;
+
+        while (!q.isEmpty()) {
+            int u = q.poll();
+            visited++;
+
+            long currentTime = Math.max(parentMax[u] + 1L,
+                                        (long) chronoLock[u]);
+
+            answer = Math.max(answer, currentTime);
+
+            for (int v : graph.get(u)) {
+                parentMax[v] = Math.max(parentMax[v], currentTime);
+
+                if (--indegree[v] == 0) {
+                    q.offer(v);
+                }
+            }
+        }
+
+        if (visited != n) {
+            System.out.println("CYCLE DETECTED");
+        } else {
+            System.out.println(answer);
+        }
     }
 
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        Scanner scanner = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
 
-        int N = scanner.nextInt();
-
-        int[] A = new int[N];
-
-        for (int i = 0; i < N; i++) {
-            A[i] = scanner.nextInt();
+        int[] chronoLock = new int[n];
+        for (int i = 0; i < n; i++) {
+            chronoLock[i] = sc.nextInt();
         }
 
-        int[][] T = new int[N][N];
-
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                T[i][j] = scanner.nextInt();
-            }
+        int[][] edges = new int[m][2];
+        for (int i = 0; i < m; i++) {
+            edges[i][0] = sc.nextInt();
+            edges[i][1] = sc.nextInt();
         }
 
-        int result = max_remaining_sum(N, A, T);
-
-        System.out.println(result);
+        chronoLockedUpgrade(n, m, chronoLock, edges);
     }
 }
