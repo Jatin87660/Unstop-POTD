@@ -18,7 +18,7 @@ class Main {
             right[i] = Integer.parseInt(st.nextToken());
         }
 
-        // Iterative postorder traversal
+       
         List<Integer> order = new ArrayList<>();
         Stack<Integer> stack = new Stack<>();
         stack.push(0);
@@ -34,7 +34,7 @@ class Main {
         long[] subtreeMax = new long[n];
         int peakCount = 0;
 
-        // Process in reverse order (postorder)
+        
         for (int i = order.size() - 1; i >= 0; i--) {
             int node = order.get(i);
 
@@ -47,7 +47,7 @@ class Main {
                 maxDescendant = Math.max(maxDescendant, subtreeMax[right[node]]);
             }
 
-            // Leaf nodes are always Peak Relays
+            
             if (left[node] == -1 && right[node] == -1) {
                 peakCount++;
             } else {
